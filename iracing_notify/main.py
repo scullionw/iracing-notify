@@ -9,6 +9,8 @@ URL_API = "http://members.iracing.com/membersite/member/GetDriverStatus?friends=
 NIMROD_URL = 'https://www.nimrod-messenger.io/api/v1/message'
 
 def main():
+    print("Running..")
+
     with requests.session() as s:
         # Login
         s.post(URL_IRACING_LOGIN, data=credentials)
@@ -25,6 +27,8 @@ def main():
                 message = f"{name} is currently driving."
                 print(message)
                 notify(message)
+
+    print("Done.")
 
 def notify(message):
     payload = { 'api_key' : api_key, 'message' : message }
