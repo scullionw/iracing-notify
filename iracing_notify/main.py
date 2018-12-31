@@ -74,7 +74,7 @@ class Drivers:
             with cls.save_path.open(mode='rb') as f:
                 return pickle.load(f)
         else:
-            cls.save_path.parent.mkdir()
+            cls.save_path.parent.mkdir(exist_ok=True)
             return Drivers()
     
     def save(self):
