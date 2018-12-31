@@ -1,5 +1,4 @@
 import requests
-import json
 import urllib.parse
 import sys
 import pickle
@@ -11,22 +10,21 @@ URL_API = "http://members.iracing.com/membersite/member/GetDriverStatus?friends=
 NIMROD_URL = 'https://www.nimrod-messenger.io/api/v1/message'
 
 def main():
-    print("Running..")
+    notify("Running..")
 
     drivers = Drivers.load()
 
     with requests.session() as s:
         # Login
         s.post(URL_IRACING_LOGIN, data=credentials)
-        # Data request
+        # Driver status API request
         response = s.get(URL_API)
 
-    # response.json?
-    data = json.loads(response.text)
+    data = response.json()
     drivers.update(data)
     drivers.save()
 
-    print("Done.")
+    notify("Done.")
 
 def notify(message):
     print(message)
@@ -41,7 +39,7 @@ def driver_name(driver):
     return urllib.parse.unquote(name)
 
 class Drivers:
-    save_path = Path('drivers')
+    save_path = Path('data/drivers')
 
     def __init__(self):
         ## Map<str, bool>
@@ -76,6 +74,7 @@ class Drivers:
             with cls.save_path.open(mode='rb') as f:
                 return pickle.load(f)
         else:
+            cls.save_path.parent.mkdir()
             return Drivers()
     
     def save(self):
