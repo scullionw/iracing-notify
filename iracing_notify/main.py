@@ -10,8 +10,6 @@ URL_API = "http://members.iracing.com/membersite/member/GetDriverStatus?friends=
 NIMROD_URL = 'https://www.nimrod-messenger.io/api/v1/message'
 
 def main():
-    notify("Running..")
-
     drivers = Drivers.load()
 
     with requests.session() as s:
@@ -23,8 +21,6 @@ def main():
     data = response.json()
     drivers.update(data)
     drivers.save()
-
-    notify("Done.")
 
 def notify(message):
     print(message)
