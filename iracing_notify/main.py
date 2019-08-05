@@ -1,7 +1,8 @@
-from config import credentials
-from iracing import iRacingClient
-from drivers import Drivers
 import sys
+from iracing_notify.config import credentials
+from iracing_notify.iracing import iRacingClient
+from iracing_notify.drivers import Drivers
+
 
 def main():
     iracing = iRacingClient(credentials)

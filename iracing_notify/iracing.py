@@ -2,8 +2,8 @@ import requests
 import re
 import json
 import urllib.parse
-from notifications import notify
-from config import ANY_SERIES, SERIES_KEYWORDS
+from iracing_notify.notifications import notify
+from iracing_notify.config import ANY_SERIES, SERIES_KEYWORDS
 
 IRACING_LOGIN = 'https://members.iracing.com/membersite/Login'
 IRACING_FRIENDS= "http://members.iracing.com/membersite/member/GetDriverStatus?friends=1&studied=1&blacklisted=1"

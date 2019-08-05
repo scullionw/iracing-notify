@@ -1,4 +1,4 @@
-import config
+import iracing_notify.config as config
 import requests
 from twilio.rest import Client
 

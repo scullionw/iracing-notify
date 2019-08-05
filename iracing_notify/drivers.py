@@ -1,6 +1,6 @@
 import pickle
 from pathlib import Path
-from driver import Driver
+from iracing_notify.driver import Driver
 
 class Drivers:
     save_path = Path('data/drivers')

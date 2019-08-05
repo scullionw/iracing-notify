@@ -1,5 +1,5 @@
-from notifications import notify
-from config import VIP
+from iracing_notify.notifications import notify
+from iracing_notify.config import VIP
 
 class Driver:
     def __init__(self, name):
