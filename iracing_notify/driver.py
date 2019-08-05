@@ -7,6 +7,10 @@ class Driver:
         self.state = None
 
     def next_state(self, current_series):
+        # Log
+        if current_series is not None:
+            print(f"LOG: {self.name} is currently driving in {current_series}.")
+
         # Was NOT driving
         if self.state is None:
             # Is now driving
