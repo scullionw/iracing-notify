@@ -3,27 +3,40 @@ import urllib.parse
 import sys
 import pickle
 import config
+import re
+import json
 from pathlib import Path
 from twilio.rest import Client
 
-URL_IRACING_LOGIN = 'https://members.iracing.com/membersite/Login'
-URL_API = "http://members.iracing.com/membersite/member/GetDriverStatus?friends=1&studied=1&blacklisted=1"
+
 NIMROD_URL = 'https://www.nimrod-messenger.io/api/v1/message'
 VIP = ['Lando Norris', 'Max Verstappen']
+SERIES_KEYWORDS = ['F3', 'IMSA', 'GT3', 'Barber']
+ANY_SERIES = True
 
 def main():
     drivers = Drivers.load()
 
     with requests.session() as s:
-        # Login
-        s.post(URL_IRACING_LOGIN, data=config.credentials)
-        # Driver status API request
-        response = s.get(URL_API)
+        
+        friend_data = get_friend_data(s)
+        session_data = get_session_data(s)
+        filtered_data = { driver: session_data[driver] for driver in friend_data }
 
-    data = response.json()
-    drivers.update(data)
+
+    drivers.update(friend_data, session_data)
     drivers.save()
 
+def validate_scrape(friend_data, session_data):
+    pass
+
+## Scraping
+
+
+
+
+
+## Notifications
 def notify(message, important=False):
     print(message)
     nimrod(message)
@@ -46,28 +59,43 @@ def nimrod(message):
     payload = { 'api_key' : config.api_key, 'message' : message }
     requests.post(NIMROD_URL, json=payload)
 
+
+## Helper functions
 def currently_driving(driver_data):
     return 'sessionStatus' in driver_data and driver_data['sessionStatus'] != 'none'
 
-def driver_name(driver):
-    name = driver['name'].replace('+', ' ')
+def clean_name(driver):
+    name = driver.replace('+', ' ')
     return urllib.parse.unquote(name)
 
+
+## State machine
+class Driver:
+    def __init__(self, name):
+        self.name = name
+        self.state = 'Unknown'
+
+    def next_state(self, input):
+        if self.state == 'Driving':
+
+        elif self.state == 'Not Driving':
+
+        else:
+
+
+## Driver processing and persistence
 class Drivers:
     save_path = Path('data/drivers')
 
     def __init__(self):
-        ## Map<str, bool>
         self.driver_map = {}
-    
-    def add(self, driver, state):
-        self.driver_map[driver] = state
 
-    def update(self, data):
-        for driver in data['fsRacers']:
-
-            name = driver_name(driver)
-            is_driving = currently_driving(driver)
+    def update(self, friend_data, session_data):
+        for name in friend_data:
+            self.driver_map[name] = {'is_driving': friend_data[name]}
+            if name in session_data:
+                self.driver_map[name]['series'] = session_data[name]
+            
 
             if name in self.driver_map:
                 was_driving = self.driver_map[name]
@@ -80,7 +108,11 @@ class Drivers:
                 else:
                     pass
                 
-            self.driver_map[name] = is_driving
+    def process():
+
+    def add_driver():
+
+    def next_state():
 
 
     @classmethod
@@ -96,6 +128,6 @@ class Drivers:
         with self.save_path.open(mode='wb') as f:
             pickle.dump(self, f)
 
+
 if __name__ == '__main__':
     sys.exit(main())
-
