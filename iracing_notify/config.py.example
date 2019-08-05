@@ -1,2 +1,11 @@
+# iRacing
 credentials = {"username": "IRACING_USERNAME", "password": "IRACING_PASSWORD"}
+
+# Nimrod
 api_key = 'ENTER_NIMROD_API_KEY_HERE'
+
+# Twilio
+account_sid = 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+auth_token = 'your_auth_token'
+from_ = 'your_twilio_phone_number'
+to = 'phone_to_notify'

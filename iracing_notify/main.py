@@ -2,19 +2,21 @@ import requests
 import urllib.parse
 import sys
 import pickle
-from config import credentials, api_key
+import config
 from pathlib import Path
+from twilio.rest import Client
 
 URL_IRACING_LOGIN = 'https://members.iracing.com/membersite/Login'
 URL_API = "http://members.iracing.com/membersite/member/GetDriverStatus?friends=1&studied=1&blacklisted=1"
 NIMROD_URL = 'https://www.nimrod-messenger.io/api/v1/message'
+VIP = ['Lando Norris', 'Max Verstappen']
 
 def main():
     drivers = Drivers.load()
 
     with requests.session() as s:
         # Login
-        s.post(URL_IRACING_LOGIN, data=credentials)
+        s.post(URL_IRACING_LOGIN, data=config.credentials)
         # Driver status API request
         response = s.get(URL_API)
 
@@ -22,9 +24,26 @@ def main():
     drivers.update(data)
     drivers.save()
 
-def notify(message):
+def notify(message, important=False):
     print(message)
-    payload = { 'api_key' : api_key, 'message' : message }
+    nimrod(message)
+    if important:
+        twilio(message)
+    
+def twilio(message):
+    account_sid = config.account_sid
+    auth_token = config.auth_token
+    client = Client(account_sid, auth_token)
+
+    message = client.messages \
+            .create(
+                body=message,
+                from_=config.from_,
+                to=config.to
+            )
+
+def nimrod(message):
+    payload = { 'api_key' : config.api_key, 'message' : message }
     requests.post(NIMROD_URL, json=payload)
 
 def currently_driving(driver_data):
@@ -57,7 +76,7 @@ class Drivers:
                 elif was_driving and not is_driving:
                     notify(f"{name} has stopped driving.")
                 elif not was_driving and is_driving:
-                    notify(f"{name} is now driving.")
+                    notify(f"{name} is now driving.", name in VIP)
                 else:
                     pass
                 
