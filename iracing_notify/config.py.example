@@ -9,3 +9,8 @@ account_sid = 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 auth_token = 'your_auth_token'
 from_ = 'your_twilio_phone_number'
 to = 'phone_to_notify'
+
+# Configuration
+VIP = ['Driver Name 1', 'Driver Name 2']
+SERIES_KEYWORDS = ['F3', 'IMSA', 'GT3', 'Barber', '...']
+ANY_SERIES = True
