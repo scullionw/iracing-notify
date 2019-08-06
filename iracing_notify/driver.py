@@ -15,7 +15,7 @@ class Driver:
         if self.state is None:
             # Is now driving
             if info is not None:
-                self.set_driving(info['series_name'], info['event_type'])
+                self.set_driving(info)
             # Is not driving
             else:
                 pass
@@ -24,8 +24,8 @@ class Driver:
             # Is now driving
             if info is not None:
                 # Driving in different series
-                if info['series_name'] != self.state:
-                    self.set_driving(info['series_name'], info['event_type'])
+                if info != self.state:
+                    self.set_driving(info)
                 # Driving in same series
                 else:
                     pass
@@ -33,9 +33,9 @@ class Driver:
             else:
                 self.set_not_driving()
 
-    def set_driving(self, current_series, event_type):
-        self.state = current_series
-        notify(f"{self.name} is now driving in {current_series} - {event_type}.", self.name in VIP)
+    def set_driving(self, info):
+        self.state = info
+        notify(f"{self.name} is now driving in {info['series_name']} - {info['event_type']}.", self.name in VIP)
 
     def set_not_driving(self):
         self.state = None
