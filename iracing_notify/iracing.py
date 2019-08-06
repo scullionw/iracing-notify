@@ -94,6 +94,8 @@ class iRacingClient:
                 event_type = 'Practice'
             elif el['evttype'] == 5:
                 event_type = 'Race'
+            elif el['evttype'] == 4:
+                event_type = 'Time Trial'
             else:
                 event_type = 'Other'
 
