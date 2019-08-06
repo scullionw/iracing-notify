@@ -10,7 +10,8 @@ IRACING_LOGIN = 'https://members.iracing.com/membersite/Login'
 IRACING_FRIENDS= "http://members.iracing.com/membersite/member/GetDriverStatus?friends=1&studied=1&blacklisted=1"
 IRACING_HOME = "https://members.iracing.com/membersite/member/Home.do"
 IRACING_PRACTICE_SUBSESSIONS = "https://members.iracing.com/membersite/member/GetOpenSessions?season={series_id}&invokedby=seriessessionspage"
-IRACING_SUBSESSION_DRIVERS = "https://members.iracing.com/membersite/member/GetOpenSessionDrivers?subsessionid={subsession}&requestindex=0"
+IRACING_OPENSESSION_DRIVERS = "https://members.iracing.com/membersite/member/GetOpenSessionDrivers?subsessionid={subsession}&requestindex=0"
+IRACING_SESSION_DRIVERS = "https://members.iracing.com/membersite/member/GetSessionDrivers?subsessionid={subsession}&requestindex=0"
 IRACING_WATCH_SUBSESSIONS = "https://members.iracing.com/membersite/member/GetSpectatorSessions?type=road"
 
 class iRacingClient:
@@ -42,21 +43,23 @@ class iRacingClient:
         return friend_data
 
     def session_data(self):
+        session_data = {}
         series = self.series()
 
         # Practice sessions
-        subsessions_prac = {}
+        subsessions = {}
         for series_id, series_name in series.items():
             for subsession, event_type in self.practice_subsessions(series_id).items():
-                subsessions_prac[subsession] = {'series_id': series_id, 'series_name': series_name, 'event_type': event_type }
+                subsessions[subsession] = {'series_id': series_id, 'series_name': series_name, 'event_type': event_type }
         
-        # Watch sessions
-        subsessions_watch = self.watch_subsessions(series)
-        subsessions = {**subsessions_prac, **subsessions_watch}
-      
-        session_data = {}
         for subsession, info in subsessions.items():
-            for driver in self.drivers(subsession):
+            for driver in self.open_session_drivers(subsession):
+                session_data[driver] = info
+
+        # Watch sessions
+        subsessions = self.watch_subsessions(series)
+        for subsession, info in subsessions.items():
+            for driver in self.session_drivers(subsession):
                 session_data[driver] = info
 
         return session_data
@@ -98,8 +101,14 @@ class iRacingClient:
 
         return subsessions
 
-    def drivers(self, subsession):
-        url = IRACING_SUBSESSION_DRIVERS.format(subsession=subsession)
+    def open_session_drivers(self, subsession):
+        url = IRACING_OPENSESSION_DRIVERS.format(subsession=subsession)
+        response = self.session.get(url)
+        data = response.json()
+        return [self.clean(el['dn']) for el in data['rows']]
+
+    def session_drivers(self, subsession):
+        url = IRACING_SESSION_DRIVERS.format(subsession=subsession)
         response = self.session.get(url)
         data = response.json()
         return [self.clean(el['dn']) for el in data['rows']]
