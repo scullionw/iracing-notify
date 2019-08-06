@@ -9,11 +9,11 @@ class Drivers:
         self.drivers = {}
 
     def update(self, driver_status):
-        for name, current_series in driver_status.items():
+        for name, info in driver_status.items():
             if name not in self.drivers:
                 self.drivers[name] = Driver(name)
                 
-            self.drivers[name].next_state(current_series)
+            self.drivers[name].next_state(info)
             
 
     @classmethod

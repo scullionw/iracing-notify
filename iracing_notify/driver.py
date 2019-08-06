@@ -6,26 +6,26 @@ class Driver:
         self.name = name
         self.state = None
 
-    def next_state(self, current_series):
+    def next_state(self, info):
         # Log
-        if current_series is not None:
-            print(f"LOG: {self.name} is currently driving in {current_series}.")
+        if info is not None:
+            print(f"LOG: {self.name} is currently driving in {info['series_name']} - {info['event_type']}.")
 
         # Was NOT driving
         if self.state is None:
             # Is now driving
-            if current_series is not None:
-                self.set_driving(current_series)
+            if info is not None:
+                self.set_driving(info['series_name'], info['event_type'])
             # Is not driving
             else:
                 pass
         # Was driving
         else:
             # Is now driving
-            if current_series is not None:
+            if info is not None:
                 # Driving in different series
-                if current_series != self.state:
-                    self.set_driving(current_series)
+                if info['series_name'] != self.state:
+                    self.set_driving(info['series_name'], info['event_type'])
                 # Driving in same series
                 else:
                     pass
@@ -33,9 +33,9 @@ class Driver:
             else:
                 self.set_not_driving()
 
-    def set_driving(self, series):
-        self.state = series
-        notify(f"{self.name} is now driving in {series}.", self.name in VIP)
+    def set_driving(self, current_series, event_type):
+        self.state = current_series
+        notify(f"{self.name} is now driving in {current_series} - {event_type}.", self.name in VIP)
 
     def set_not_driving(self):
         self.state = None

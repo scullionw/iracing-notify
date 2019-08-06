@@ -5,13 +5,13 @@ import urllib.parse
 import multiprocessing as mp
 from collections import ChainMap
 from iracing_notify.notifications import notify
-from iracing_notify.config import ANY_SERIES, SERIES_KEYWORDS
 
 IRACING_LOGIN = 'https://members.iracing.com/membersite/Login'
 IRACING_FRIENDS= "http://members.iracing.com/membersite/member/GetDriverStatus?friends=1&studied=1&blacklisted=1"
 IRACING_HOME = "https://members.iracing.com/membersite/member/Home.do"
-IRACING_SUBSESSIONS = "https://members.iracing.com/membersite/member/GetOpenSessions?season={series_id}&invokedby=seriessessionspage"
+IRACING_PRACTICE_SUBSESSIONS = "https://members.iracing.com/membersite/member/GetOpenSessions?season={series_id}&invokedby=seriessessionspage"
 IRACING_SUBSESSION_DRIVERS = "https://members.iracing.com/membersite/member/GetOpenSessionDrivers?subsessionid={subsession}&requestindex=0"
+IRACING_WATCH_SUBSESSIONS = "https://members.iracing.com/membersite/member/GetSpectatorSessions?type=road"
 
 class iRacingClient:
 
@@ -42,30 +42,24 @@ class iRacingClient:
         return friend_data
 
     def session_data(self):
-        session_data = {}
-        for series_id, series_name in self.series().items():
-            for subsession in self.subsessions(series_id):
-                for driver in self.drivers(subsession):
-                    session_data[driver] = series_name
-
-        return session_data
-
-    # Can't use reliably because of 429 response (rate limited)
-    def concurrent_session_data(self):
         series = self.series()
 
-        with mp.Pool(len(series)) as pool:
-            all_session_data = pool.map(self.drivers_in_series, series)
-
-        flattened = dict(ChainMap(*all_session_data))
-        return { name: series[series_id] for name, series_id in flattened.items() }
-
-    def drivers_in_series(self, series_id):
-        partial_session_data = {}
-        for subsession in self.subsessions(series_id):
+        # Practice sessions
+        subsessions_prac = {}
+        for series_id, series_name in series.items():
+            for subsession, event_type in self.practice_subsessions(series_id).items():
+                subsessions_prac[subsession] = {'series_id': series_id, 'series_name': series_name, 'event_type': event_type }
+        
+        # Watch sessions
+        subsessions_watch = self.watch_subsessions(series)
+        subsessions = {**subsessions_prac, **subsessions_watch}
+      
+        session_data = {}
+        for subsession, info in subsessions.items():
             for driver in self.drivers(subsession):
-                partial_session_data[driver] = series_id
-        return partial_session_data
+                session_data[driver] = info
+
+        return session_data
 
     def series(self):
         response = self.session.get(IRACING_HOME)
@@ -77,13 +71,32 @@ class iRacingClient:
             if entry['category'] == 2:
                 series[entry['seasonid']] = self.clean(entry['seriesname'])
 
-        return { k:v for k,v in series.items() if ANY_SERIES or any([word.lower() in v.lower() for word in SERIES_KEYWORDS]) }
+        return series
 
-    def subsessions(self, series_id):
-        url = IRACING_SUBSESSIONS.format(series_id=series_id)
+    def practice_subsessions(self, series_id):
+        url = IRACING_PRACTICE_SUBSESSIONS.format(series_id=series_id)
         response = self.session.get(url)
         data = response.json()
-        return [el['15'] for el in data['d']]
+        return { el['15']: 'Practice' for el in data['d'] }
+
+    def watch_subsessions(self, series):
+        response = self.session.get(IRACING_WATCH_SUBSESSIONS)
+        data = response.json()
+        subsessions = {}
+        for el in data:
+            subsession_id = el['subsessionid']
+            series_id = el['seasonid']
+            series_name = series[series_id]
+            if el['evttype'] == 2:
+                event_type = 'Practice'
+            elif el['evttype'] == 5:
+                event_type = 'Race'
+            else:
+                event_type = 'Other'
+
+            subsessions[subsession_id] = {'series_id': series_id, 'series_name': series_name, 'event_type': event_type }
+
+        return subsessions
 
     def drivers(self, subsession):
         url = IRACING_SUBSESSION_DRIVERS.format(subsession=subsession)

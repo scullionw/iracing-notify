@@ -12,5 +12,3 @@ to = 'phone_to_notify'
 
 # Configuration
 VIP = ['Driver Name 1', 'Driver Name 2']
-SERIES_KEYWORDS = ['F3', 'IMSA', 'GT3', 'Barber', '...']
-ANY_SERIES = True
