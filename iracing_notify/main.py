@@ -1,7 +1,7 @@
 import sys
 from iracing_notify.config import credentials
-from iracing_notify.iracing import iRacingClient
 from iracing_notify.drivers import Drivers
+from iracing_web_api.iracing_web_api import iRacingClient
 
 
 def main():
