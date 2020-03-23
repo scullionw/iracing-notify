@@ -5,12 +5,14 @@ from iracing_web_api.iracing_web_api import iRacingClient
 
 
 def main():
+    print("Fetching..")
     iracing = iRacingClient(credentials["username"], credentials["password"])
     driver_status = iracing.driver_status()
 
     drivers = Drivers.load()
     drivers.update(driver_status)
     drivers.save()
+    print("Done.")
 
 if __name__ == '__main__':
     sys.exit(main())
