@@ -5,10 +5,10 @@ from twilio.rest import Client
 NIMROD_URL = 'https://www.nimrod-messenger.io/api/v1/message'
 
 def notify(message, important=False):
-    print(message)
+    # print(message)
     nimrod(message)
-    if important:
-        twilio(message)
+    # if important:
+    #     twilio(message)
     
 def twilio(message):
     account_sid = config.account_sid

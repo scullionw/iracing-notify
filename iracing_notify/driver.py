@@ -35,8 +35,14 @@ class Driver:
 
     def set_driving(self, info):
         self.state = info
-        notify(f"{self.name} is now driving in {info['series_name']} - {info['event_type']}.", self.name in VIP)
+
+        for group in VIP:
+            if self.name in group:
+                notify(f"{self.name} is now driving in {info['series_name']} - {info['event_type']}.")
 
     def set_not_driving(self):
         self.state = None
-        notify(f"{self.name} has stopped driving", self.name in VIP)
+
+        for group in VIP:
+            if self.name in group:
+                notify(f"{self.name} has stopped driving")
