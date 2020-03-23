@@ -6,7 +6,7 @@ RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-
 RUN mkdir /app
 WORKDIR /app
 COPY . /app
-RUN . $HOME/.poetry/env && poetry config settings.virtualenvs.create false
+RUN . $HOME/.poetry/env && poetry config virtualenvs.create false
 RUN . $HOME/.poetry/env && poetry update && poetry install
 
 # Execute app
