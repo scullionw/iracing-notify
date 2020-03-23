@@ -5,7 +5,7 @@ from iracing_web_api.iracing_web_api import iRacingClient
 
 
 def main():
-    iracing = iRacingClient(credentials)
+    iracing = iRacingClient(credentials["username"], credentials["password"])
     driver_status = iracing.driver_status()
 
     drivers = Drivers.load()
