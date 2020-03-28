@@ -9,6 +9,7 @@ class Driver:
     def next_state(self, info):
         # Log
         if info is not None:
+            notify(f"LOG: {self.name} is currently driving in {info['series_name']} - {info['event_type']}.")
             print(f"LOG: {self.name} is currently driving in {info['series_name']} - {info['event_type']}.")
 
         # Was NOT driving
