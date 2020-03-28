@@ -9,6 +9,8 @@ def main():
     iracing = iRacingClient(credentials["username"], credentials["password"])
     driver_status = iracing.driver_status()
 
+    print(driver_status)
+
     drivers = Drivers.load()
     drivers.update(driver_status)
     drivers.save()

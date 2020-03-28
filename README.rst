@@ -1,1 +1,0 @@
-*/5 * * * * cd /root/iracing-notify && docker run -v /root/data_storage/:/app/data/ iracing-notify-v1
