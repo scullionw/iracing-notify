@@ -1,6 +1,7 @@
 from iracing_notify.notifications import notify
 from iracing_notify.config import VIP
 
+
 class Driver:
     def __init__(self, name):
         self.name = name
@@ -9,8 +10,12 @@ class Driver:
     def next_state(self, info):
         # Log
         if info is not None:
-            notify(f"LOG: {self.name} is currently driving in {info['series_name']} - {info['event_type']}.")
-            print(f"LOG: {self.name} is currently driving in {info['series_name']} - {info['event_type']}.")
+            notify(
+                f"LOG: {self.name} is currently driving in {info['series_name']} - {info['event_type']}."
+            )
+            print(
+                f"LOG: {self.name} is currently driving in {info['series_name']} - {info['event_type']}."
+            )
 
         # Was NOT driving
         if self.state is None:
@@ -38,7 +43,9 @@ class Driver:
         self.state = info
         for group, names in VIP.items():
             if self.name in names:
-                notify(f"{self.name} is now driving in {info['series_name']} - {info['event_type']}.")
+                notify(
+                    f"{self.name} is now driving in {info['series_name']} - {info['event_type']}."
+                )
 
     def set_not_driving(self):
         self.state = None
