@@ -1,109 +1,66 @@
 import React, { useState, useEffect } from 'react';
 
-class Clock extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { date: new Date() };
-    }
 
-    componentDidMount() {
-        this.timerID = setInterval(
-            () => this.tick(),
-            1000
-        );
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.timerID);
-    }
-
-    tick() { this.setState({ date: new Date() }); }
-
-    render() {
-        return (
-            <div>
-                <h2>{this.state.date.toLocaleTimeString()}.</h2>
-            </div>
-        );
-    }
-}
-
-function ClockH(props) {
-
-    const [date, setDate] = useState(new Date());
-
-    let timerID = null;
-
-    useEffect(() => {
-        componentDidMount();
-
-        return componentWillUnmount;
-    }, [])
-
-    function componentDidMount() {
-        timerID = setInterval(
-            () => tick(),
-            1000
-        );
-        console.log("Started timer!")
-        // setTimerID(timerID);
-    }
-
-    function componentWillUnmount() {
-        clearInterval(timerID);
-        console.log("Clear timer!")
-    }
-
-    function tick() { setDate(new Date()) }
-
-
+function Driving(props) {
     return (
-        <div>
-            <h2>{date.toLocaleTimeString()}.</h2>
-        </div>
+        <DriverList status="Online" drivers={props.drivers} />
     );
-
 }
 
-
-
-let NAMES = [
-    "Max Verstappen",
-    "Lando Norris",
-];
+function Offline(props) {
+    return (
+        <DriverList status="Offline" drivers={props.drivers} />
+    );
+}
 
 function Driver(props) {
     return <li>{props.name}</li>
 }
 
-export default function Drivers() {
-
-    let [count, setCount] = useState(0);
-
-
-
-    useEffect(() => {
-        const timer = setInterval(() => setCount(count + 1), 1000);
-        console.log("Started name timer!")
-
-        return () => {
-            clearInterval(timer);
-            console.log("Stopped name timer!")
-        }
-    })
-
-
-    const drivers = NAMES.map((n) => <Driver key={n} name={n} />);
-
+function DriverList(props) {
+    const elements = props.drivers.map(d => <Driver key={d.name} name={d.name} />);
     return (
         <div>
-            <ClockH />
-            <h1>Currently Driving</h1>
-            <ul>
-                {drivers}
-                <li>{count}</li>
-            </ul>
+            <h2>{props.status}</h2>
+            <ul>{elements}</ul>
         </div>
-
     );
 }
+
+
+export default function Drivers() {
+    const [status, setStatus] = useState(null);
+
+    useEffect(() => {
+        async function load_drivers() {
+            let resp = await fetch("/drivers");
+            let data = await resp.json();
+            setStatus(data);
+            console.log("Called!");
+        }
+
+        load_drivers();
+
+        const timer = setInterval(load_drivers, 1000);
+
+    }, []);
+
+    let online = [];
+    let offline = [];
+
+    if (status === null) {
+        return null;
+    }
+
+    status.forEach(driver => (driver.driving === null ? offline : online).push(driver));
+
+    return (
+        <>
+            <h1>Driver status</h1>
+            <Driving drivers={online} />
+            <Offline drivers={offline} />
+        </>
+    );
+}
+
+
