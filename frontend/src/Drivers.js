@@ -33,7 +33,7 @@ export default function Drivers() {
 
     useEffect(() => {
         async function load_drivers() {
-            let resp = await fetch("/drivers");
+            let resp = await fetch("/api/drivers");
             let data = await resp.json();
             setStatus(data);
             console.log("Called!");

@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
+from typing import List
 
 app = FastAPI()
 
@@ -17,16 +19,23 @@ DRIVER_STATUS = [
 ]
 
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
+class SessionInfo(BaseModel):
+    track: str
+    car: str
+    session_type: str
 
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: str = None):
-    return {"item_id": item_id, "q": q}
+class Driver(BaseModel):
+    name: str
+    category: str
+    driving: SessionInfo
 
 
-@app.get("/drivers")
-def driver_status():
+@app.get("/api/drivers")
+async def driver_status():
     return DRIVER_STATUS
+
+
+@app.post("/api/update/")
+async def update_driver_status(driverstatus: List[Driver]):
+    return driverstatus
