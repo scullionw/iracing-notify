@@ -36,12 +36,15 @@ export default function Drivers() {
             let resp = await fetch("/api/drivers");
             let data = await resp.json();
             setStatus(data);
-            console.log("Called!");
         }
 
         load_drivers();
 
         const timer = setInterval(load_drivers, 1000);
+
+        return () => {
+            clearInterval(timer);
+        }
 
     }, []);
 
@@ -55,11 +58,11 @@ export default function Drivers() {
     status.forEach(driver => (driver.driving === null ? offline : online).push(driver));
 
     return (
-        <>
+        <div id="drivers">
             <h1>Driver status</h1>
             <Driving drivers={online} />
             <Offline drivers={offline} />
-        </>
+        </div>
     );
 }
 
