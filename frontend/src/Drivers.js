@@ -1,41 +1,39 @@
-import React, { useState, useEffect } from 'react';
-
+import React, { useState, useEffect } from "react";
+import partition from "lodash/partition";
+import styles from "@emotion/styled";
 
 function Driving(props) {
-    return (
-        <DriverList status="Online" drivers={props.drivers} />
-    );
+    return <DriverList status="Online" drivers={props.drivers} />;
 }
 
 function Offline(props) {
-    return (
-        <DriverList status="Offline" drivers={props.drivers} />
-    );
+    return <DriverList status="Offline" drivers={props.drivers} />;
 }
 
 function Driver(props) {
-    return <li>{props.name}</li>
+    return <li>{props.name}</li>;
 }
 
-function DriverList(props) {
-    const elements = props.drivers.map(d => <Driver key={d.name} name={d.name} />);
+function DriverList({ drivers, status }) {
+    const elements = drivers.map((d) => <Driver key={d.name} name={d.name} />);
     return (
         <div>
-            <h2>{props.status}</h2>
+            <h2>{status}</h2>
             <ul>{elements}</ul>
         </div>
     );
 }
 
-
 export default function Drivers() {
     const [status, setStatus] = useState(null);
+    const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
         async function load_drivers() {
             let resp = await fetch("/api/drivers");
             let data = await resp.json();
             setStatus(data);
+            setIsLoaded(true);
         }
 
         load_drivers();
@@ -44,18 +42,17 @@ export default function Drivers() {
 
         return () => {
             clearInterval(timer);
-        }
-
+        };
     }, []);
 
-    let online = [];
-    let offline = [];
-
-    if (status === null) {
+    if (!isLoaded) {
         return null;
     }
 
-    status.forEach(driver => (driver.driving === null ? offline : online).push(driver));
+    const [offline, online] = partition(
+        status,
+        (driver) => driver.driving === null
+    );
 
     return (
         <div id="drivers">
@@ -65,5 +62,3 @@ export default function Drivers() {
         </div>
     );
 }
-
-
