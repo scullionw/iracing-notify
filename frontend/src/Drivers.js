@@ -8,6 +8,7 @@ import {
     List,
     ListItem,
     ListItemText,
+    Card,
 } from "@material-ui/core";
 
 function Driving(props) {
@@ -20,22 +21,28 @@ function Offline(props) {
 
 function Driver(props) {
     return (
-        <ListItem>
-            <ListItemText primary={props.name} secondary={"Interlagos"} />
-        </ListItem>
+        <Card>
+            <ListItem>
+                <ListItemText primary={props.name} secondary={"Interlagos"} />
+            </ListItem>
+        </Card>
     );
 }
 
 function DriverList({ drivers, status }) {
-    const elements = drivers.map((d) => <Driver key={d.name} name={d.name} />);
+    const elements = drivers.map((d) => (
+        <>
+            <Driver key={d.name} name={d.name} />
+            <br />
+        </>
+    ));
     return (
         <div>
             <Typography variant="h5">
                 <b>{status}</b>
             </Typography>
-            <Paper>
-                <List>{elements}</List>
-            </Paper>
+            <br />
+            {elements}
         </div>
     );
 }
