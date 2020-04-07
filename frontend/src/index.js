@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import * as serviceWorker from "./serviceWorker";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { Global, css } from "@emotion/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Drivers from "./Drivers";
+import Container from "@material-ui/core/Container";
 
 ReactDOM.render(
     <React.StrictMode>
@@ -26,7 +26,9 @@ ReactDOM.render(
                 }
             `}
         />
-        <Drivers />
+        <Container maxWidth="sm">
+            <Drivers />
+        </Container>
     </React.StrictMode>,
     document.getElementById("root")
 );

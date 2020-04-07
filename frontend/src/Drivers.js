@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import partition from "lodash/partition";
-import styles from "@emotion/styled";
-import { Button } from "@material-ui/core";
+import styled from "@emotion/styled";
+import {
+    Button,
+    Paper,
+    Typography,
+    List,
+    ListItem,
+    ListItemText,
+} from "@material-ui/core";
 
 function Driving(props) {
     return <DriverList status="Online" drivers={props.drivers} />;
@@ -12,18 +19,34 @@ function Offline(props) {
 }
 
 function Driver(props) {
-    return <li>{props.name}</li>;
+    return (
+        <ListItem>
+            <ListItemText primary={props.name} secondary={"Interlagos"} />
+        </ListItem>
+    );
 }
 
 function DriverList({ drivers, status }) {
     const elements = drivers.map((d) => <Driver key={d.name} name={d.name} />);
     return (
         <div>
-            <h2>{status}</h2>
-            <ul>{elements}</ul>
+            <Typography variant="h5">
+                <b>{status}</b>
+            </Typography>
+            <Paper>
+                <List>{elements}</List>
+            </Paper>
         </div>
     );
 }
+
+const CenteredTitle = styled(Typography)`
+    text-align: center;
+`;
+
+const DriverContainer = styled.div`
+    padding: 10px;
+`;
 
 export default function Drivers() {
     const [status, setStatus] = useState(null);
@@ -56,13 +79,10 @@ export default function Drivers() {
     );
 
     return (
-        <div id="drivers">
-            <h1>Driver status</h1>
+        <DriverContainer>
+            <CenteredTitle variant="h2">Driver status</CenteredTitle>
             <Driving drivers={online} />
             <Offline drivers={offline} />
-            <Button variant="contained" color="primary">
-                Refresh
-            </Button>
-        </div>
+        </DriverContainer>
     );
 }
