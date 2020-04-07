@@ -33,6 +33,7 @@ function DriverList({ drivers, status }) {
             <Typography variant="h5">
                 <b>{status}</b>
             </Typography>
+            <br />
             <Paper>
                 <List>{elements}</List>
             </Paper>
