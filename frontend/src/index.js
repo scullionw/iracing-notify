@@ -3,10 +3,12 @@ import ReactDOM from "react-dom";
 import * as serviceWorker from "./serviceWorker";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Global, css } from "@emotion/core";
+import CssBaseline from "@material-ui/core/CssBaseline";
 import Drivers from "./Drivers";
 
 ReactDOM.render(
     <React.StrictMode>
+        <CssBaseline />
         <Global
             styles={css`
                 body {
@@ -20,7 +22,7 @@ ReactDOM.render(
                     width: auto;
 
                     padding: 0 20px 20px 20px;
-                    border: 5px solid black;
+                    /* border: 5px solid black; */
                 }
             `}
         />

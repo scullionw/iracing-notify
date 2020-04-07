@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import partition from "lodash/partition";
 import styles from "@emotion/styled";
+import { Button } from "@material-ui/core";
 
 function Driving(props) {
     return <DriverList status="Online" drivers={props.drivers} />;
@@ -59,6 +60,9 @@ export default function Drivers() {
             <h1>Driver status</h1>
             <Driving drivers={online} />
             <Offline drivers={offline} />
+            <Button variant="contained" color="primary">
+                Refresh
+            </Button>
         </div>
     );
 }
