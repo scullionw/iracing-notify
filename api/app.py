@@ -58,7 +58,7 @@ class SessionInfo(BaseModel):
 class Driver(BaseModel):
     name: str
     category: str
-    driving: SessionInfo
+    driving: SessionInfo = None
 
 
 @app.get("/api/drivers")
