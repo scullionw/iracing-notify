@@ -30,6 +30,7 @@ DRIVER_STATUS_MOCK = [
         "driving": {
             "track": "Gilles-Villeneuve",
             "car": "Dallara F3",
+            "series": "F3 Championship",
             "session_type": "Practice",
         },
     },
@@ -39,6 +40,7 @@ DRIVER_STATUS_MOCK = [
         "driving": {
             "track": "Gilles-Villeneuve",
             "car": "Dallara F3",
+            "series": "F3 Championship",
             "session_type": "Practice",
         },
     },
@@ -52,6 +54,7 @@ DRIVER_STATUS = AtomicValue(DRIVER_STATUS_MOCK)
 class SessionInfo(BaseModel):
     track: str
     car: str
+    series: str
     session_type: str
 
 

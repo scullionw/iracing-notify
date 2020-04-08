@@ -40,7 +40,8 @@ def adjust(data: Dict) -> List[Dict[str, Any]]:
                 "driving": info
                 and {
                     "track": "Unknown",
-                    "car": info["series_name"],
+                    "car": "Unknown",
+                    "series": info["series_name"],
                     "session_type": info["event_type"],
                 },
             }

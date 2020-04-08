@@ -20,14 +20,17 @@ function Offline(props) {
     return <DriverList status="Offline" drivers={props.drivers} />;
 }
 
-function Driver(props) {
+function Driver({ info }) {
     return (
         <Grid item>
             <Card>
                 <ListItem>
                     <ListItemText
-                        primary={props.name}
-                        secondary={"Interlagos"}
+                        primary={`${info.name}`}
+                        secondary={
+                            info.driving &&
+                            `${info.driving.series} - ${info.driving.session_type}`
+                        }
                     />
                 </ListItem>
             </Card>
@@ -38,7 +41,7 @@ function Driver(props) {
 function DriverList({ drivers, status }) {
     const elements = drivers.map((d) => (
         <>
-            <Driver key={d.name} name={d.name} />
+            <Driver key={d.name} info={d} />
         </>
     ));
     return (
@@ -51,7 +54,7 @@ function DriverList({ drivers, status }) {
                 container
                 direction="column"
                 justify="center"
-                alignItems="left"
+                alignItems="stretch"
                 spacing={1}
             >
                 {elements}
