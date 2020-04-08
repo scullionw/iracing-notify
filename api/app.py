@@ -14,6 +14,15 @@ DRIVER_STATUS = [
             "session_type": "Practice",
         },
     },
+    {
+        "name": "Charles Leclerc",
+        "category": "F1",
+        "driving": {
+            "track": "Gilles-Villeneuve",
+            "car": "Dallara F3",
+            "session_type": "Practice",
+        },
+    },
     {"name": "Lando Norris", "category": "F1", "driving": None},
     {"name": "Suellio Almeida", "category": "Sim", "driving": None},
 ]
