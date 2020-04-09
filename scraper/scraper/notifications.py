@@ -1,4 +1,4 @@
-import iracing_notify.config as config
+import scraper.config as config
 import requests
 
 NIMROD_URL = "https://www.nimrod-messenger.io/api/v1/message"

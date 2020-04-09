@@ -1,6 +1,6 @@
 import pickle
 from pathlib import Path
-from iracing_notify.driver import Driver
+from scraper.driver import Driver
 
 
 class Drivers:

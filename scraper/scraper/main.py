@@ -1,7 +1,7 @@
 import sys
-from iracing_notify.config import credentials
-from iracing_notify.drivers import Drivers
-from iracing_notify.config import VIP
+from scraper.config import credentials
+from scraper.drivers import Drivers
+from scraper.config import VIP
 from iracing_web_api import iRacingClient, LoginFailed
 import time
 import requests

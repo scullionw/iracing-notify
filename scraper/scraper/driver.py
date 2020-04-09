@@ -1,5 +1,5 @@
-from iracing_notify.notifications import notify
-from iracing_notify.config import VIP
+from scraper.notifications import notify
+from scraper.config import VIP
 
 
 class Driver:
