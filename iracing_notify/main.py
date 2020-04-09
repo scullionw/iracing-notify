@@ -11,7 +11,32 @@ from typing import Optional, Any, Dict, List
 SCRAPE_DELAY_MIN = 5
 MIN_SECS = 60
 
-API_ENDPOINT_ADDR = "http://localhost:8000/api/update"
+API_ENDPOINT_ADDR = "http://docker.for.mac.localhost:8000/api/update"
+
+MOCK_SCRAPE = DRIVER_STATUS_MOCK = [
+    {
+        "name": "Max Verstappen FROM SCRAPER 3",
+        "category": "F1",
+        "driving": {
+            "track": "Gilles-Villeneuve",
+            "car": "Dallara F3",
+            "series": "F3 Championship",
+            "session_type": "Practice",
+        },
+    },
+    {
+        "name": "Charles Leclerc",
+        "category": "F1",
+        "driving": {
+            "track": "Gilles-Villeneuve",
+            "car": "Dallara F3",
+            "series": "F3 Championship",
+            "session_type": "Practice",
+        },
+    },
+    {"name": "Lando Norris", "category": "F1", "driving": None},
+    {"name": "Suellio Almeida", "category": "Sim", "driving": None},
+]
 
 
 def main():
@@ -77,5 +102,13 @@ def scrape(client: iRacingClient):
         time.sleep(SCRAPE_DELAY_MIN * MIN_SECS)
 
 
+def mock_scrape():
+    while True:
+        print(API_ENDPOINT_ADDR)
+        requests.post(API_ENDPOINT_ADDR, json=MOCK_SCRAPE)
+        time.sleep(10)
+
+
 if __name__ == "__main__":
-    sys.exit(main())
+    # sys.exit(main())
+    mock_scrape()

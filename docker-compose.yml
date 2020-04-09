@@ -1,0 +1,26 @@
+version: "3.7"
+
+services:
+    db:
+        image: postgres
+        volumes:
+            - db-storage:/var/lib/postgresql/data
+        environment:
+            POSTGRES_USER: user
+            POSTGRES_PASSWORD: pass
+        ports:
+        - '5432:5432'
+        volumes:
+        - db-storage:/var/lib/postgresql/data
+        restart: unless-stopped
+
+    scraper:
+        build: .
+        volumes:
+            - iracing-notify-store:/app/data/
+            - ./iracing_notify/:/app/iracing_notify/
+        restart: unless-stopped
+
+volumes:
+    db-storage:
+    iracing-notify-store:
