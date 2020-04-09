@@ -15,7 +15,7 @@ API_ENDPOINT_ADDR = "http://api:8000/api/update"
 
 MOCK_SCRAPE = DRIVER_STATUS_MOCK = [
     {
-        "name": "Max Verstappen FROM SCRAPER LANDO",
+        "name": "Max Verstappen FROM SCRAPER",
         "category": "F1",
         "driving": {
             "track": "Gilles-Villeneuve",
@@ -104,8 +104,13 @@ def scrape(client: iRacingClient):
 
 def mock_scrape():
     while True:
-        print(API_ENDPOINT_ADDR)
-        requests.post(API_ENDPOINT_ADDR, json=MOCK_SCRAPE)
+        print(f"POST to {API_ENDPOINT_ADDR}")
+        try:
+            requests.post(API_ENDPOINT_ADDR, json=MOCK_SCRAPE)
+        except:
+            print("API IS DOWN.")
+        else:
+            print("Post successful.")
         time.sleep(10)
 
 

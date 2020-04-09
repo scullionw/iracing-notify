@@ -4,12 +4,25 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from typing import List
 import threading
+import time
 
 from . import crud, models, schemas
 from .database import SessionLocal, engine
 
 
-models.Base.metadata.create_all(bind=engine)
+def wait_for_db():
+    while True:
+        try:
+            models.Base.metadata.create_all(bind=engine)
+        except:
+            print("Database is down.. waiting")
+            time.sleep(1)
+        else:
+            print("Connected to database!")
+            break
+
+
+wait_for_db()
 
 app = FastAPI()
 
