@@ -8,6 +8,7 @@ authors = ["William Scullion <williamscullion@gmail.com>"]
 python = "^3.8"
 uvicorn = "^0.11.3"
 fastapi = "^0.54.1"
+sqlalchemy = "^1.3.16"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"
