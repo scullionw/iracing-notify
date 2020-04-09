@@ -15,10 +15,10 @@ services:
         restart: unless-stopped
 
     scraper:
-        build: .
+        build: ./scraper
         volumes:
             - iracing-notify-store:/app/data/
-            - ./iracing_notify/:/app/iracing_notify/
+            - ./scraper/scraper/:/app/scraper/
         restart: unless-stopped
 
 volumes:

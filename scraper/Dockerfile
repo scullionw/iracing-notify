@@ -13,7 +13,7 @@ COPY ./poetry.lock ./pyproject.toml /app/
 
 RUN poetry install --no-dev
 
-COPY ./iracing_notify /app/iracing_notify
+COPY ./scraper /app/scraper
 
 # Execute app
-ENTRYPOINT ["python", "iracing_notify/main.py"]
+ENTRYPOINT ["python", "scraper/main.py"]

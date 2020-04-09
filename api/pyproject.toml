@@ -1,13 +1,13 @@
 [tool.poetry]
-name = "scraper"
+name = "api"
 version = "0.1.0"
 description = ""
 authors = ["William Scullion <williamscullion@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.7"
-iracing-web-api = { git = "https://github.com/scullionw/iracing-web-api.git", branch = "master" }
-requests = "^2.23.0"
+python = "^3.8"
+uvicorn = "^0.11.3"
+fastapi = "^0.54.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"
