@@ -1,13 +1,18 @@
-FROM python:3.7
+FROM python:3.8
 
-# install python and poetry
-RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-# create application directory
-RUN mkdir /app
+ENV PYTHONPATH "${PYTHONPATH}:/app"
+
+# Install and configure poetry
+RUN pip install poetry
+RUN poetry config virtualenvs.create false
+
+# Copy only deps for faster builds (seperating stage for cache)
 WORKDIR /app
-COPY . /app
-RUN . $HOME/.poetry/env && poetry config virtualenvs.create false
-RUN . $HOME/.poetry/env && poetry update && poetry install
+COPY ./poetry.lock ./pyproject.toml /app/
+
+RUN poetry install --no-dev
+
+COPY ./iracing_notify /app/iracing_notify
 
 # Execute app
 ENTRYPOINT ["python", "iracing_notify/main.py"]
