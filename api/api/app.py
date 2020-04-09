@@ -77,6 +77,11 @@ async def driver_status():
     return DRIVER_STATUS.value
 
 
+@app.get("/test")
+async def test():
+    return "test"
+
+
 @app.post("/api/update/")
 async def update_driver_status(driverstatus: List[Driver]):
     DRIVER_STATUS.value = driverstatus

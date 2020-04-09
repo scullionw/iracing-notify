@@ -11,11 +11,11 @@ from typing import Optional, Any, Dict, List
 SCRAPE_DELAY_MIN = 5
 MIN_SECS = 60
 
-API_ENDPOINT_ADDR = "http://docker.for.mac.localhost:8000/api/update"
+API_ENDPOINT_ADDR = "http://api:8000/api/update"
 
 MOCK_SCRAPE = DRIVER_STATUS_MOCK = [
     {
-        "name": "Max Verstappen FROM SCRAPER 3",
+        "name": "Max Verstappen FROM SCRAPER LANDO",
         "category": "F1",
         "driving": {
             "track": "Gilles-Villeneuve",
