@@ -1,37 +1,21 @@
-from typing import List
+from typing import List, Dict
 
 from pydantic import BaseModel
 
 
-class ItemBase(BaseModel):
-    title: str
-    description: str = None
+# Info from outside that we also want inside
+class ResultBase(BaseModel):
+    data: List[dict]
 
 
-class ItemCreate(ItemBase):
+# Info we get from outside but don't want inside
+class ResultCreate(ResultBase):
     pass
 
 
-class Item(ItemBase):
+# What we want to expose to outside that isn't in base or create
+class Result(ResultBase):
     id: int
-    owner_id: int
-
-    class Config:
-        orm_mode = True
-
-
-class UserBase(BaseModel):
-    email: str
-
-
-class UserCreate(UserBase):
-    password: str
-
-
-class User(UserBase):
-    id: int
-    is_active: bool
-    items: List[Item] = []
 
     class Config:
         orm_mode = True

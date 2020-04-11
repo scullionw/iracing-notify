@@ -115,5 +115,5 @@ def mock_scrape():
 
 
 if __name__ == "__main__":
-    # sys.exit(main())
-    mock_scrape()
+    sys.exit(main())
+    # mock_scrape()
