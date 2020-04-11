@@ -1,7 +1,7 @@
 FROM python:3.8
 
 ENV PYTHONPATH "${PYTHONPATH}:/app"
-ENV PYTHONUNBUFFERED=1
+ENV PYTHONUNBUFFERED 1
 
 # Install and configure poetry
 RUN pip install poetry
