@@ -1,61 +1,52 @@
 import sys
-from scraper.config import credentials
 from scraper.drivers import Drivers
-from scraper.config import VIP
+from scraper.defaultdrivers import VIP
 from iracing_web_api import iRacingClient, LoginFailed
 import time
 import requests
 import json
 from typing import Optional, Any, Dict, List
+import os
+import logging
+import scraper.mock
 
 SCRAPE_DELAY_MIN = 5
 MIN_SECS = 60
 
-API_ENDPOINT_ADDR = "http://api:8000/api/update"
-
-MOCK_SCRAPE = DRIVER_STATUS_MOCK = [
-    {
-        "name": "Max Verstappen FROM SCRAPER",
-        "category": "F1",
-        "driving": {
-            "track": "Gilles-Villeneuve",
-            "car": "Dallara F3",
-            "series": "F3 Championship",
-            "session_type": "Practice",
-        },
-    },
-    {
-        "name": "Charles Leclerc",
-        "category": "F1",
-        "driving": {
-            "track": "Gilles-Villeneuve",
-            "car": "Dallara F3",
-            "series": "F3 Championship",
-            "session_type": "Practice",
-        },
-    },
-    {"name": "Lando Norris", "category": "F1", "driving": None},
-    {"name": "Suellio Almeida", "category": "Sim", "driving": None},
-]
+API_URL = os.getenv("API_URL")
+API_ENDPOINT_ADDR = f"{API_URL}/api/update"
 
 
 def main():
-    print("Logging in.")
+    logging.info("Logging in..")
 
     try:
-        iracing = iRacingClient(credentials["username"], credentials["password"])
+        username = os.getenv("IRACING_USERNAME")
+        password = os.getenv("IRACING_PASSWORD")
+        if not (username and password):
+            logging.error("Must provide IRACING_USERNAME and IRACING_PASSWORD")
+            sys.exit(1)
+
+        iracing = iRacingClient(username, password)
     except LoginFailed:
-        print("Login failed. Exiting.")
+        logging.warn("Login failed. Exiting. Wrong credentials or captcha required")
+        sys.exit(1)
     else:
-        print("Logged in.")
+        logging.info("Logged in.")
         scrape(iracing)
 
 
-def send_data(data: Dict):
-    requests.post(API_ENDPOINT_ADDR, json=adjust(data))
+def send_data(endpoint: str, data: List[dict]):
+    logging.debug(f"POST to {endpoint}")
+    try:
+        requests.post(endpoint, json=data)
+    except:
+        logging.warn("API is down.")
+    else:
+        logging.debug("POST successful")
 
 
-def adjust(data: Dict) -> List[Dict[str, Any]]:
+def adjust(data: dict) -> List[dict]:
     adjusted = []
     for name, info in data.items():
         adjusted.append(
@@ -86,14 +77,15 @@ def category(name: str) -> str:
 def scrape(client: iRacingClient):
     while True:
         start = time.time()
-        print("Scraping..")
+        logging.info("Scraping..")
         driver_status = client.driver_status()
-        print("Finished scraping!")
+        logging.info("Finished scraping!")
         end = time.time()
 
-        print(f"Scraping took {end - start} seconds.")
+        logging.info(f"Scraping took {end - start} seconds.")
 
-        send_data(driver_status)
+        adjusted_data = adjust(driver_status)
+        send_data(API_ENDPOINT_ADDR, adjusted_data)
 
         drivers = Drivers.load()
         drivers.update(driver_status)
@@ -102,18 +94,9 @@ def scrape(client: iRacingClient):
         time.sleep(SCRAPE_DELAY_MIN * MIN_SECS)
 
 
-def mock_scrape():
-    while True:
-        print(f"POST to {API_ENDPOINT_ADDR}")
-        try:
-            requests.post(API_ENDPOINT_ADDR, json=MOCK_SCRAPE)
-        except:
-            print("API IS DOWN.")
-        else:
-            print("Post successful.")
-        time.sleep(10)
-
-
 if __name__ == "__main__":
-    sys.exit(main())
-    # mock_scrape()
+    if "MOCKSCRAPE" in os.environ:
+        logging.info("MOCKING!")
+        sys.exit(scraper.mock.mock_scrape(API_ENDPOINT_ADDR))
+    else:
+        sys.exit(main())

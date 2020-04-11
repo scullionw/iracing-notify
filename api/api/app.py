@@ -1,14 +1,14 @@
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
-
 from pydantic import BaseModel
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 import threading
 import time
-
+import logging
 from . import crud, models, schemas
 from .database import SessionLocal, engine
+import os
 
 
 def wait_for_db():
@@ -16,10 +16,10 @@ def wait_for_db():
         try:
             models.Base.metadata.create_all(bind=engine)
         except:
-            print("Database is down.. waiting")
+            logging.warn("Database is down.. waiting")
             time.sleep(1)
         else:
-            print("Connected to database!")
+            logging.info("Connected to database!")
             break
 
 
@@ -46,7 +46,7 @@ class SessionInfo(BaseModel):
 class Driver(BaseModel):
     name: str
     category: str
-    driving: SessionInfo = None
+    driving: Optional[SessionInfo] = None
 
 
 @app.get("/api/drivers")

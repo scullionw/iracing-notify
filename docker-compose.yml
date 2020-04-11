@@ -6,7 +6,7 @@ services:
         volumes:
             - db-storage:/var/lib/postgresql/data
         environment:
-            POSTGRES_PASSWORD: example
+            - POSTGRES_PASSWORD=example
         ports:
             - "5432:5432"
         restart: unless-stopped
@@ -17,6 +17,10 @@ services:
             - iracing-notify-store:/app/data/
             - ./scraper/scraper/:/app/scraper/
         restart: unless-stopped
+        environment:
+            - API_URL=http://api:8000
+        env_file:
+            - .env
         depends_on:
             - api
 
@@ -26,6 +30,8 @@ services:
             - ./api/api/:/app/api/
         ports:
             - "8000:8000"
+        environment:
+            - DATABASE_URL=postgresql://postgres:example@db/postgres
         restart: unless-stopped
         depends_on:
             - db

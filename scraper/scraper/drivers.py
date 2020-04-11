@@ -9,7 +9,7 @@ class Drivers:
     def __init__(self):
         self.drivers = {}
 
-    def update(self, driver_status):
+    def update(self, driver_status: dict):
         for name, info in driver_status.items():
             if name not in self.drivers:
                 self.drivers[name] = Driver(name)

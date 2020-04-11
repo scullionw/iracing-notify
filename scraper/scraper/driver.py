@@ -1,20 +1,19 @@
-from scraper.notifications import notify
-from scraper.config import VIP
+from scraper.defaultdrivers import VIP
+import logging
+import os
+from typing import Optional
 
 
 class Driver:
-    def __init__(self, name):
-        self.name = name
-        self.state = None
+    def __init__(self, name: str):
+        self.name: str = name
+        self.state: Optional[dict] = None
 
-    def next_state(self, info):
+    def next_state(self, info: Optional[dict]):
         # Log
         if info is not None:
-            notify(
-                f"LOG: {self.name} is currently driving in {info['series_name']} - {info['event_type']}."
-            )
-            print(
-                f"LOG: {self.name} is currently driving in {info['series_name']} - {info['event_type']}."
+            logging.info(
+                f"{self.name} is currently driving in {info['series_name']} - {info['event_type']}."
             )
 
         # Was NOT driving
@@ -39,16 +38,8 @@ class Driver:
             else:
                 self.set_not_driving()
 
-    def set_driving(self, info):
+    def set_driving(self, info: Optional[dict]):
         self.state = info
-        for group, names in VIP.items():
-            if self.name in names:
-                notify(
-                    f"{self.name} is now driving in {info['series_name']} - {info['event_type']}."
-                )
 
     def set_not_driving(self):
         self.state = None
-        for group, names in VIP.items():
-            if self.name in names:
-                notify(f"{self.name} has stopped driving")
