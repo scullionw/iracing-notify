@@ -72,21 +72,32 @@ const DriverContainer = styled.div`
     padding: 10px;
 `;
 
+const WarningTitle = styled(CenteredTitle)`
+    color: red;
+`;
+
 export default function Drivers() {
     const [status, setStatus] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        async function load_drivers() {
+        async function get_drivers() {
             let resp = await fetch("/api/drivers");
             let data = await resp.json();
             setStatus(data);
+            setError(null);
             setIsLoaded(true);
         }
 
-        load_drivers();
+        function load() {
+            get_drivers().catch((error) => {
+                setError(error);
+                setIsLoaded(true);
+            });
+        }
 
-        const timer = setInterval(load_drivers, 1000);
+        const timer = setInterval(load, 1000);
 
         return () => {
             clearInterval(timer);
@@ -105,8 +116,17 @@ export default function Drivers() {
     return (
         <DriverContainer>
             <CenteredTitle variant="h2">Driver status</CenteredTitle>
-            <Driving drivers={online} />
-            <Offline drivers={offline} />
+            {error ? (
+                <>
+                    <br />
+                    <WarningTitle variant="h5">API is down</WarningTitle>
+                </>
+            ) : (
+                <>
+                    <Driving drivers={online} />
+                    <Offline drivers={offline} />
+                </>
+            )}
         </DriverContainer>
     );
 }
