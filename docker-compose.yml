@@ -18,7 +18,7 @@ services:
             - ./scraper/scraper/:/app/scraper/
         restart: unless-stopped
         environment:
-            - API_URL=http://api:8000
+            - API_URL=http://api:80
         env_file:
             - .env
         depends_on:
@@ -27,9 +27,9 @@ services:
     api:
         build: ./api
         volumes:
-            - ./api/api/:/app/api/
+            - ./api/api/:/app/app
         ports:
-            - "8000:8000"
+            - "80:80"
         environment:
             - DATABASE_URL=postgresql://postgres:example@db/postgres
         restart: unless-stopped

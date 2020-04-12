@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.7
 
 ENV PYTHONPATH "${PYTHONPATH}:/app"
 ENV PYTHONUNBUFFERED 1
@@ -13,7 +13,4 @@ COPY ./poetry.lock ./pyproject.toml /app/
 
 RUN poetry install --no-dev
 
-COPY ./api /app/api
-
-# Execute app
-ENTRYPOINT ["uvicorn", "api.app:app", "--host", "0.0.0.0", "--reload"]
+COPY ./api /app/app

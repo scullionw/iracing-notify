@@ -49,6 +49,11 @@ class Driver(BaseModel):
     driving: Optional[SessionInfo] = None
 
 
+@app.get("/api/health")
+def health():
+    return "Alive!"
+
+
 @app.get("/api/drivers")
 def driver_status(db: Session = Depends(get_db)):
     latest = crud.get_latest_result(db)
