@@ -29,11 +29,7 @@ function extra_info(info) {
 }
 
 function DriverList({ drivers, status }) {
-    const elements = drivers.map((d) => (
-        <>
-            <Driver key={d.name} info={d} />
-        </>
-    ));
+    const elements = drivers.map((d) => <Driver key={d.name} info={d} />);
     return (
         <div>
             <Typography variant="h5">
