@@ -2,23 +2,12 @@ import React, { useState, useEffect } from "react";
 import partition from "lodash/partition";
 import styled from "@emotion/styled";
 import {
-    Button,
-    Paper,
     Typography,
-    List,
     ListItem,
     ListItemText,
     Card,
     Grid,
 } from "@material-ui/core";
-
-function Driving(props) {
-    return <DriverList status="Online" drivers={props.drivers} />;
-}
-
-function Offline(props) {
-    return <DriverList status="Offline" drivers={props.drivers} />;
-}
 
 function Driver({ info }) {
     return (
@@ -27,15 +16,16 @@ function Driver({ info }) {
                 <ListItem>
                     <ListItemText
                         primary={`${info.name}`}
-                        secondary={
-                            info.driving &&
-                            `${info.driving.series} - ${info.driving.session_type}`
-                        }
+                        secondary={info.driving && extra_info(info)}
                     />
                 </ListItem>
             </Card>
         </Grid>
     );
+}
+
+function extra_info(info) {
+    return `${info.driving.series} - ${info.driving.session_type}`;
 }
 
 function DriverList({ drivers, status }) {
@@ -76,6 +66,25 @@ const WarningTitle = styled(CenteredTitle)`
     color: red;
 `;
 
+function APIResults({ error, content }) {
+    if (error) {
+        return (
+            <>
+                <br />
+                <WarningTitle variant="h5">API is down</WarningTitle>
+            </>
+        );
+    } else {
+        const [online, offline] = partition(content, (d) => d.driving);
+        return (
+            <>
+                <DriverList status="Online" drivers={online} />
+                <DriverList status="Offline" drivers={offline} />
+            </>
+        );
+    }
+}
+
 export default function Drivers() {
     const [status, setStatus] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -108,25 +117,10 @@ export default function Drivers() {
         return null;
     }
 
-    const [offline, online] = partition(
-        status,
-        (driver) => driver.driving === null
-    );
-
     return (
         <DriverContainer>
             <CenteredTitle variant="h2">Driver status</CenteredTitle>
-            {error ? (
-                <>
-                    <br />
-                    <WarningTitle variant="h5">API is down</WarningTitle>
-                </>
-            ) : (
-                <>
-                    <Driving drivers={online} />
-                    <Offline drivers={offline} />
-                </>
-            )}
+            <APIResults error={error} content={status} />
         </DriverContainer>
     );
 }
