@@ -29,7 +29,7 @@ def main():
 
         iracing = iRacingClient(username, password)
     except LoginFailed:
-        logging.warn("Login failed. Exiting. Wrong credentials or captcha required")
+        logging.warning("Login failed. Exiting. Wrong credentials or captcha required")
         sys.exit(1)
     else:
         logging.info("Logged in.")
@@ -41,7 +41,7 @@ def send_data(endpoint: str, data: List[dict]):
     try:
         requests.post(endpoint, json=data)
     except:
-        logging.warn("API is down.")
+        logging.warning("API is down.")
     else:
         logging.debug("POST successful")
 
