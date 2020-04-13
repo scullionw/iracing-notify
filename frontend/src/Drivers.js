@@ -97,6 +97,7 @@ export default function Drivers() {
 
         function load() {
             get_drivers().catch((error) => {
+                console.log(error);
                 setError(error);
                 setIsLoaded(true);
             });
