@@ -88,7 +88,7 @@ export default function Drivers() {
 
     useEffect(() => {
         async function get_drivers() {
-            let resp = await fetch("/api/drivers");
+            let resp = await fetch("./api/drivers");
             let data = await resp.json();
             setStatus(data);
             setError(null);
