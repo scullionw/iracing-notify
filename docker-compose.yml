@@ -72,7 +72,7 @@ services:
     ui:
         build: ./frontend
         ports:
-            - "8085:8085"
+            - "80:80"
         restart: always
         # labels:
         #     - "traefik.enable=true"
