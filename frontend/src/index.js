@@ -5,7 +5,6 @@ import { Global, css } from "@emotion/core";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Drivers from "./Drivers";
 import Container from "@material-ui/core/Container";
-import "typeface-roboto";
 
 ReactDOM.render(
     <React.StrictMode>

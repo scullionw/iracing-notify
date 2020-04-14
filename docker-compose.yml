@@ -19,7 +19,7 @@ services:
         restart: always
         environment:
             - API_URL=http://api:5000
-            - MOCKSCRAPE=
+            # - MOCKSCRAPE=
         env_file:
             - .env
         depends_on:
@@ -36,49 +36,11 @@ services:
         depends_on:
             - db
 
-    reverse-proxy:
-        # The official v2 Traefik docker image
-        image: traefik:v2.2
-        # Enables the web UI and tells Traefik to listen to docker
-        command:
-            #- "--log.level=DEBUG"
-            - "--api.insecure=true"
-            - "--providers.docker=true"
-            - "--providers.docker.exposedbydefault=false"
-            - "--entrypoints.web.address=:80"
-        ports:
-            # The HTTP port
-            - "80:80"
-            # The Web UI (enabled by --api.insecure=true)
-            - "8080:8080"
-        volumes:
-            # So that Traefik can listen to the Docker events
-            - /var/run/docker.sock:/var/run/docker.sock
-        restart: always
-
-    # # whoami:
-    # #     # A container that exposes an API to show its IP address
-    # #     image: containous/whoami
-    # #     labels:
-    # #         - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"
-
-    whoami:
-        image: "containous/whoami"
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.whoami.rule=PathPrefix(`/whoami`)"
-            - "traefik.http.routers.whoami.entrypoints=web"
-
     ui:
         build: ./frontend
         restart: always
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.ui.entrypoints=web"
-            - "traefik.http.routers.ui.rule=PathPrefix(`/iracingapp/`)"
-            - "traefik.http.routers.ui.middlewares=ui-stripprefix"
-            - "traefik.http.middlewares.ui-stripprefix.stripprefix.prefixes=/iracingapp/"
-
+        ports:
+            - "80:80"
         depends_on:
             - api
 
