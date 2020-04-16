@@ -12,6 +12,7 @@ services:
         restart: always
         networks:
             - backend
+            - traefik-net
 
     scraper:
         build: ./scraper
@@ -28,6 +29,7 @@ services:
             - api
         networks:
             - backend
+            - traefik-net
 
     api:
         build: ./api
@@ -41,6 +43,7 @@ services:
             - db
         networks:
             - backend
+            - traefik-net
 
     ui:
         build: ./frontend
