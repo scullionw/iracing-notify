@@ -52,7 +52,7 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.ui.entrypoints=web"
-            - "traefik.http.routers.ui.rule=Host(`localhost`)"
+            - "traefik.http.routers.ui.rule=Host(`iracingnotify.live`)"
         networks:
             - traefik-net
             - backend
