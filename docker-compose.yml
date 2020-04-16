@@ -39,10 +39,13 @@ services:
     ui:
         build: ./frontend
         restart: always
-        ports:
-            - "80:80"
+        # ports:
+        #     - "80:80"
         depends_on:
             - api
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.ui.rule=Host(`iracingnotify.live`)
 
 volumes:
     db-storage:
