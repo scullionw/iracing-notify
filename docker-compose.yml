@@ -12,7 +12,6 @@ services:
         restart: always
         networks:
             - backend
-            - traefik-net
 
     scraper:
         build: ./scraper
@@ -29,7 +28,6 @@ services:
             - api
         networks:
             - backend
-            - traefik-net
 
     api:
         build: ./api
@@ -43,7 +41,6 @@ services:
             - db
         networks:
             - backend
-            - traefik-net
 
     ui:
         build: ./frontend
@@ -54,6 +51,7 @@ services:
             - api
         labels:
             - "traefik.enable=true"
+            - "traefik.docker.network=traefik-net"
             - "traefik.http.routers.ui.entrypoints=web"
             - "traefik.http.routers.ui.rule=Host(`iracingnotify.live`)"
         networks:
@@ -68,4 +66,3 @@ networks:
     traefik-net:
         external: true
     backend:
-        external: false
