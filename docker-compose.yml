@@ -48,6 +48,20 @@ services:
             - "traefik.http.routers.ui.entrypoints=web"
             - "traefik.http.routers.ui.rule=Host(`iracingnotify.live`)"
 
+    traefik:
+        image: traefik:v2.2
+        command:
+            - "--api.insecure=true"
+            - "--providers.docker=true"
+            - "--providers.docker.exposedbydefault=false"
+            - "--entrypoints.web.address=:80"
+        ports:
+            - "80:80"
+            - "8080:8080"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        restart: always
+
 volumes:
     db-storage:
     iracing-notify-store:
