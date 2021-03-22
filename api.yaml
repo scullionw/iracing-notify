@@ -28,7 +28,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: api-configuration
-          imagePullPolicy: "Never"
           ports:
             - containerPort: 5000
 ---

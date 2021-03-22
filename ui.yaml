@@ -15,7 +15,6 @@ spec:
       containers:
         - name: iracing-notify-ui
           image: scullionw/iracing-notify-ui
-          imagePullPolicy: "Never"
           ports:
             - containerPort: 80
 ---

@@ -15,7 +15,6 @@ spec:
       containers:
         - name: iracing-notify-scraper
           image: scullionw/iracing-notify-scraper
-          imagePullPolicy: "Never"
           env:
             - name: API_URL
               value: "http://iracing-notify-api:5000"
