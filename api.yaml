@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-configuration
+  labels:
+    app: iracing-notify-api
+data:
+  DATABASE_URL: postgresql://postgres:example@postgres-service/postgres
+  PORT: "5000"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iracing-notify-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: iracing-notify-api
+  template:
+    metadata:
+      labels:
+        run: iracing-notify-api
+    spec:
+      containers:
+        - name: iracing-notify-api
+          image: scullionw/iracing-notify-api
+          envFrom:
+            - configMapRef:
+                name: api-configuration
+          imagePullPolicy: "Never"
+          ports:
+            - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: iracing-notify-api
+  labels:
+    run: iracing-notify-api
+spec:
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  selector:
+    run: iracing-notify-api

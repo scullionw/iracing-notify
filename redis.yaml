@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-configuration
+  labels:
+    app: redis
+data:
+  # redis_DB: awesomedb
+  # redis_USER: amazinguser
+  redis_PASSWORD: example
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis-statefulset
+  labels:
+    app: redis
+spec:
+  serviceName: "redis"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis
+          envFrom:
+            - configMapRef:
+                name: redis-configuration
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: pv-data-redis
+              mountPath: /data
+      volumes:
+        - name: pv-data-redis
+          persistentVolumeClaim:
+            claimName: redis-pv-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+  labels:
+    app: redis
+spec:
+  ports:
+    - port: 6379
+      name: redis
+  selector:
+    app: redis
