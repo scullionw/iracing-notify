@@ -116,7 +116,7 @@ export default function Drivers() {
 
     return (
         <DriverContainer>
-            <CenteredTitle variant="h2">Driver status</CenteredTitle>
+            <CenteredTitle variant="h2">Drivers</CenteredTitle>
             <APIResults error={error} content={status} />
         </DriverContainer>
     );
