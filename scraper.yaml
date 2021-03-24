@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iracing-notify-scraper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: iracing-notify-scraper
+  template:
+    metadata:
+      labels:
+        run: iracing-notify-scraper
+    spec:
+      containers:
+        - name: iracing-notify-scraper
+          image: scullionw/iracing-notify-scraper
+          env:
+            - name: API_URL
+              value: "http://iracing-notify-api:5000"
+          envFrom:
+            - secretRef:
+                name: scraper-configuration

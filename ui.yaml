@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iracing-notify-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: iracing-notify-ui
+  template:
+    metadata:
+      labels:
+        run: iracing-notify-ui
+    spec:
+      containers:
+        - name: iracing-notify-ui
+          image: scullionw/iracing-notify-ui
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: iracing-notify-ui
+  labels:
+    run: iracing-notify-ui
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8087
+      targetPort: 80
+  selector:
+    run: iracing-notify-ui

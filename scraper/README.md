@@ -1,13 +1,16 @@
 # iracing-notify
 
-1. Create docker volume
+1.  Create env file with credentials
 
-        docker volume create iracing-notify-store
+        IRACING_USERNAME=
+        IRACING_PASSWORD=
 
-2. Build image
+2.  Create secrets resource
 
-        docker build -t iracing-notify .
+        kubectl create secret generic scraper-configuration --from-env-file=.env
 
-3. Configure cron
+3.  Apply deployments
 
-        */5 * * * * cd ~/iracing-notify && docker run -v iracing-notify-store:/app/data/ iracing-notify
+        kubectl apply -f redis-storage.yaml -f database-storage.yaml
+        kubectl apply -f redis.yaml -f database.yaml
+        kubectl apply -f api.yaml -f ui.yaml -f scraper.yaml

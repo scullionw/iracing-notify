@@ -8,7 +8,7 @@ import json
 from typing import Optional, Any, Dict, List
 import os
 import logging
-import scraper.mock
+from spontit import SpontitResource
 
 SCRAPE_DELAY_MIN = 5
 MIN_SECS = 60
@@ -33,7 +33,12 @@ def main():
         sys.exit(1)
     else:
         logging.info("Logged in.")
-        scrape(iracing)
+        resource = SpontitResource(
+            "william_scullion7383",
+            "JAC7U2XK9VD9UQ44W30B73QZFVBIW88B5T82DNMB6XF7B8EQGOFR19COSWL1Z1NHVS7MMBBRAPCYLNHX0JM9GLGHLJH7HUCVKGR8",
+        )
+        drivers = Drivers(resource)
+        scrape(iracing, drivers)
 
 
 def send_data(endpoint: str, data: List[dict]):
@@ -74,29 +79,39 @@ def category(name: str) -> str:
     return "Other"
 
 
-def scrape(client: iRacingClient):
+def scrape(client: iRacingClient, drivers):
     while True:
         start = time.time()
         logging.info("Scraping..")
-        driver_status = client.driver_status()
-        logging.info("Finished scraping!")
-        end = time.time()
 
-        logging.info(f"Scraping took {end - start} seconds.")
+        try:
+            driver_status = client.driver_status()
+        except json.decoder.JSONDecodeError:
+            logging.warning("JSON decoding error. Maybe iRacing is down?")
+        else:
+            adjusted_data = adjust(driver_status)
+            send_data(API_ENDPOINT_ADDR, adjusted_data)
 
-        adjusted_data = adjust(driver_status)
-        send_data(API_ENDPOINT_ADDR, adjusted_data)
+            drivers.update(driver_status)
 
-        drivers = Drivers.load()
-        drivers.update(driver_status)
-        drivers.save()
+            log_status(driver_status)
+        finally:
+            logging.info("Finished scraping!")
 
-        time.sleep(SCRAPE_DELAY_MIN * MIN_SECS)
+            end = time.time()
+            logging.info(f"Scraping took {end - start} seconds.")
+
+            time.sleep(SCRAPE_DELAY_MIN * MIN_SECS)
+
+
+def log_status(driver_status):
+    logging.info("--- Scrape results ---")
+    for name, info in driver_status.items():
+        if info is not None:
+            logging.info(
+                f"{name} is currently driving in {info['series_name']} - {info['event_type']}."
+            )
 
 
 if __name__ == "__main__":
-    if "MOCKSCRAPE" in os.environ:
-        logging.info("MOCKING!")
-        sys.exit(scraper.mock.mock_scrape(API_ENDPOINT_ADDR))
-    else:
-        sys.exit(main())
+    sys.exit(main())
