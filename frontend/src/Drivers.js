@@ -25,7 +25,7 @@ function Driver({ info }) {
 }
 
 function extra_info(info) {
-    return `${info.driving.series} - ${info.driving.session_type}`;
+    return `${info.driving.series} - ${info.driving.session_type} (${info.driving.subsession})`;
 }
 
 function DriverList({ drivers, status }) {

@@ -64,6 +64,7 @@ def adjust(data: dict) -> List[dict]:
                     "car": "Unknown",
                     "series": info["series_name"],
                     "session_type": info["event_type"],
+                    "subsession": info["subsession"]
                 },
             }
         )
