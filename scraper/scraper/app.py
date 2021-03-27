@@ -97,7 +97,7 @@ def scrape(client: iRacingClient, drivers):
 
             log_status(driver_status)
         finally:
-            logging.info("Finished scraping!")
+            logging.info("----------------------\n")
 
             end = time.time()
             logging.info(f"Scraping took {end - start} seconds.")
@@ -106,7 +106,7 @@ def scrape(client: iRacingClient, drivers):
 
 
 def log_status(driver_status):
-    logging.info("--- Scrape results ---")
+    logging.info("--- Scrape results ---\n")
     for name, info in driver_status.items():
         if info is not None:
             logging.info(
