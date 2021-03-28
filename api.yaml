@@ -13,7 +13,7 @@ kind: Deployment
 metadata:
   name: iracing-notify-api
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       run: iracing-notify-api

@@ -38,6 +38,7 @@ metadata:
   name: iracing-notify-ingress
   annotations:
     kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: acme-prod
 spec:
   rules:
     - host: "iracingnotify.live"
@@ -50,3 +51,7 @@ spec:
                 name: iracing-notify-ui
                 port:
                   number: 80
+  tls:
+    - hosts:
+        - iracingnotify.live
+      secretName: iracingnotify-live-tls
