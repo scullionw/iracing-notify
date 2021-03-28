@@ -25,10 +25,28 @@ metadata:
   labels:
     run: iracing-notify-ui
 spec:
-  type: LoadBalancer
   ports:
     - protocol: TCP
-      port: 8087
+      port: 80
       targetPort: 80
   selector:
     run: iracing-notify-ui
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: iracing-notify-ingress
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+    - host: "iracingnotify.live"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: iracing-notify-ui
+                port:
+                  number: 80
