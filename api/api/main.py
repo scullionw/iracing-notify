@@ -41,6 +41,7 @@ class SessionInfo(BaseModel):
     car: str
     series: str
     session_type: str
+    subsession: str
 
 
 class Driver(BaseModel):
