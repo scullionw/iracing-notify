@@ -10,7 +10,7 @@ import os
 import logging
 from spontit import SpontitResource
 
-SCRAPE_DELAY_MIN = 5
+SCRAPE_DELAY_MIN = 4
 MIN_SECS = 60
 
 API_URL = os.getenv("API_URL")
