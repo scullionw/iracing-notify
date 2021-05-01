@@ -2,12 +2,14 @@ from scraper.driver import Driver
 import redis
 import json
 import logging
+from scraper.defaultdrivers import VIP
 
 
 class Drivers:
     def __init__(self, resource):
         self.redis_client = redis.Redis(host="redis-service", port=6379, db=0)
         self.resource = resource
+        self.notifications = []
 
     def get(self, name):
         value = self.redis_client.get(name)
@@ -30,7 +32,7 @@ class Drivers:
             if previous_state is None:
                 # Is now driving
                 if info is not None:
-                    notifications.append(notify_driving(name, info))
+                    self.add_to_notifications(name, notify_driving(name, info))
                 # Is not driving
                 else:
                     pass
@@ -40,16 +42,27 @@ class Drivers:
                 if info is not None:
                     # Driving in different series
                     if info != previous_state:
-                        notifications.append(notify_driving(name, info))
+                        self.add_to_notifications(name, notify_driving(name, info))
                     # Driving in same series
                     else:
                         pass
                 # Is not driving
                 else:
-                    notifications.append(notify_stopped(name))
+                    self.add_to_notifications(name, notify_stopped(name))
 
-        message = "\n".join(notifications)
+        self.send_notifications()
+
+    def add_to_notifications(self, name, notification):
+        if name in VIP["friends"]:
+            self.notifications.append(notification)
+
+    def send_notifications(self):
+        message = "\n".join(self.notifications)
         self.resource.push(message)
+        self.notifications = []
+
+
+
 
 
 def notify_driving(name, info):
