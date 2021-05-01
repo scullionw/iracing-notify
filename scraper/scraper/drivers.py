@@ -62,9 +62,6 @@ class Drivers:
         self.notifications = []
 
 
-
-
-
 def notify_driving(name, info):
     return (
         f"{name} is currently driving in {info['series_name']} - {info['event_type']}."
