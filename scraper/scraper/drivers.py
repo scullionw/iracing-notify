@@ -23,7 +23,6 @@ class Drivers:
         self.redis_client.set(name, json.dumps(info))
 
     def update(self, driver_status: dict):
-        notifications = []
         for name, info in driver_status.items():
             previous_state = self.get(name)
             self.set(name, info)

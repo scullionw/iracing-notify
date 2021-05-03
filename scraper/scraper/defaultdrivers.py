@@ -31,7 +31,8 @@ VIP = {
     "friends": [
         "Sandy Scullion",
         "Charles Asselin",
-        "Emrick Vincent" "Lou-James Scullion",
+        "Emrick Vincent",
+        "Lou-James Scullion",
         "Nicolas Cool",
         "Samuel Asselin2",
         "Kurtis Duddy2",
