@@ -96,13 +96,14 @@ def scrape(client: iRacingClient, drivers):
             drivers.update(driver_status)
 
             log_status(driver_status)
-        finally:
-            logging.info("----------------------\n")
 
-            end = time.time()
-            logging.info(f"Scraping took {end - start} seconds.")
+        logging.info("----------------------\n")
 
-            time.sleep(SCRAPE_DELAY_MIN * MIN_SECS)
+        end = time.time()
+        logging.info(f"Scraping took {end - start} seconds.")
+
+        time.sleep(SCRAPE_DELAY_MIN * MIN_SECS)
+
 
 
 def log_status(driver_status):
