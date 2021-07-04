@@ -1,5 +1,6 @@
 import sys
 from scraper.drivers import Drivers
+from scraper import VIP
 from iracing_web_api import iRacingClient, LoginFailed
 import time
 import requests
@@ -7,7 +8,6 @@ import json
 from typing import List
 import os
 import logging
-from spontit import SpontitResource
 
 SCRAPE_DELAY_MIN = 4
 MIN_SECS = 60
@@ -32,11 +32,7 @@ def main():
         sys.exit(1)
     else:
         logging.info("Logged in.")
-        resource = SpontitResource(
-            "william_scullion7383",
-            "JAC7U2XK9VD9UQ44W30B73QZFVBIW88B5T82DNMB6XF7B8EQGOFR19COSWL1Z1NHVS7MMBBRAPCYLNHX0JM9GLGHLJH7HUCVKGR8",
-        )
-        drivers = Drivers(resource)
+        drivers = Drivers()
         scrape(iracing, drivers)
 
 

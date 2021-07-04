@@ -1,11 +1,11 @@
 import redis
 import json
+from scraper import VIP
 
 
 class Drivers:
-    def __init__(self, resource):
+    def __init__(self):
         self.redis_client = redis.Redis(host="redis-service", port=6379, db=0)
-        self.resource = resource
         self.notifications = []
 
     def get(self, name):
@@ -54,7 +54,6 @@ class Drivers:
 
     def send_notifications(self):
         message = "\n".join(self.notifications)
-        self.resource.push(message)
         self.notifications = []
 
 

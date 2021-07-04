@@ -9,7 +9,6 @@ python = "^3.7"
 iracing-web-api = { git = "https://github.com/scullionw/iracing-web-api.git", branch = "master" }
 requests = "^2.23.0"
 redis = "^3.5.3"
-spontit = "^1.0.8"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
