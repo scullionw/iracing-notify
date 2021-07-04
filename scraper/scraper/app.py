@@ -1,11 +1,10 @@
 import sys
 from scraper.drivers import Drivers
-from scraper.defaultdrivers import VIP
 from iracing_web_api import iRacingClient, LoginFailed
 import time
 import requests
 import json
-from typing import Optional, Any, Dict, List
+from typing import List
 import os
 import logging
 from spontit import SpontitResource
@@ -64,7 +63,7 @@ def adjust(data: dict) -> List[dict]:
                     "car": "Unknown",
                     "series": info["series_name"],
                     "session_type": info["event_type"],
-                    "subsession": info["subsession"]
+                    "subsession": info["subsession"],
                 },
             }
         )
@@ -103,7 +102,6 @@ def scrape(client: iRacingClient, drivers):
         logging.info(f"Scraping took {end - start} seconds.")
 
         time.sleep(SCRAPE_DELAY_MIN * MIN_SECS)
-
 
 
 def log_status(driver_status):

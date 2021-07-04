@@ -1,8 +1,5 @@
-from scraper.driver import Driver
 import redis
 import json
-import logging
-from scraper.defaultdrivers import VIP
 
 
 class Drivers:

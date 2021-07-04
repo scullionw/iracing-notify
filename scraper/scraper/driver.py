@@ -1,6 +1,4 @@
-from scraper.defaultdrivers import VIP
 import logging
-import os
 from typing import Optional
 
 
