@@ -8,7 +8,7 @@ authors = ["William Scullion <williamscullion@gmail.com>"]
 python = "^3.7"
 iracing-web-api = { git = "https://github.com/scullionw/iracing-web-api.git", branch = "master" }
 requests = "^2.23.0"
-redis = "^3.5.3"
+redis = "^4.5.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
